@@ -1,0 +1,45 @@
+
+
+node {
+    stage('GitCheckout'){
+        checkout scm
+    } 
+
+    stage('Init'){
+    withCredentials([azureServicePrincipal('test-rig-demo-jenkins')]) {
+        sh '''
+            set -e
+            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+            az aks get-credentials --resource-group test-rg --subscription 57b13db8-88cf-4fe6-924b-ae10dc6fadee   --name demo-aks
+            rm -rf ~/DROPDOWNS/
+        '''
+    }}
+ 
+    stage('Get Namespaces'){
+            sh '''
+                set -e
+                for NAMESPACE in $(kubectl get namespaces -o json | jq -r '.items[].metadata | select(.name | startswith("self-")) | .name ')
+                do
+                    echo NAMESPACE is $NAMESPACE
+                    mkdir -p ~/DROPDOWNS/namespaces/${NAMESPACE}
+                done
+            '''
+    }
+ 
+    stage('Get Repos'){
+        sh '''
+            set -e
+            for REPOSITORY in $(az acr repository list --subscription 57b13db8-88cf-4fe6-924b-ae10dc6fadee --name testrigregistry | jq -r '.[]')
+            do
+                echo REPO is $REPOSITORY
+                for TAG in $(az acr repository show-tags --subscription 57b13db8-88cf-4fe6-924b-ae10dc6fadee --name testrigregistry --repository $REPOSITORY | jq -r .[])
+                do
+                    mkdir -p ~/DROPDOWNS/apps/$REPOSITORY/$TAG
+                done
+            done
+        '''
+    }
+}
+ 
+
+
