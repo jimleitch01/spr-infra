@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: testrigregistry.azurecr.io/spr-be
+  tag: release-0.5.0
   pullPolicy: IfNotPresent
 
 service:
