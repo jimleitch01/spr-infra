@@ -4,13 +4,13 @@ node {
         checkout scm
     } 
 
-//   stage('Init Stage'){
-//         env.ACR_NAME = "testrigregistry"
-//         env.SUBSCRIPTION_ID = "57b13db8-88cf-4fe6-924b-ae10dc6fadee"
-//         env.AKS_NAME = "demo-aks"
-//         env.RESOURCE_GROUP = "demo-rg"
-// 	    env.BRANCH_NAME = env.BRANCH_NAME.replaceAll('/','_')
-//     }
+  stage('Init Stage'){
+        env.ACR_NAME = "testrigregistry"
+        env.SUBSCRIPTION_ID = "57b13db8-88cf-4fe6-924b-ae10dc6fadee"
+        env.AKS_NAME = "demo-aks"
+        env.RESOURCE_GROUP = "demo-rg"
+	    env.BRANCH_NAME = env.BRANCH_NAME.replaceAll('/','_')
+    }
 }
 
     // stage('Deploying'){
