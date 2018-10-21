@@ -1,0 +1,34 @@
+
+node {
+    
+    stage('GitCheckout'){
+        checkout scm
+    } 
+
+    stage('Deploying'){
+    withCredentials([azureServicePrincipal('lias-omnia-dev-jenkins')]) {
+        sh '''
+            COLOR=$(echo ${NAMESPACE} | cut -d "-" -f2)
+            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+            echo NAMESPACE=${NAMESPACE}
+            echo TAG_UX_FLEX=${TAG_UX_FLEX}
+            echo TAG_BS_FLEX_API=${TAG_BS_FLEX_API}
+            echo COLOR is ${COLOR}
+            helm list omni-${COLOR}
+            if [ "$(helm list -q omni-${COLOR})" != "" ]
+            then 
+                helm del --purge omni-${COLOR}
+            fi
+
+            kubectl delete job omni-${COLOR} --namespace=self-${COLOR} --ignore-not-found 
+            sleep 5
+            helm install --dep-up --name omni-${COLOR} --namespace self-${COLOR} --timeout 600  helm/omni --set bs-flex-api.image.tag=${TAG_BS_FLEX_API},bs-flex-api.flexmigrator.tag=${TAG_FLEXMIGRATOR},ux-flex.image.tag=${TAG_UX_FLEX}
+
+            #helm install  --dep-up --name omni-${COLOR} --namespace ${NAMESPACE} helm/omni --set bs-flex-api.omnidb.userpw=Passw0rd,bs-flex-api.omnidb.host=omni-yellow-omnidb,bs-flex-api.omnidb.port=1433,bs-flex-api.image.tag=${TAG_BS_FLEX_API},ux-flex.image.tag=${TAG_UX_FLEX}
+        '''
+    }} 
+    
+
+}
+
+

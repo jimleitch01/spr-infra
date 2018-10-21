@@ -1,0 +1,29 @@
+node {
+    
+    stage('GitCheckout'){
+        checkout scm
+    } 
+
+    // stage('Deploying'){
+    //     withCredentials([azureServicePrincipal('lias-omnia-dev-jenkins')]) {
+    //         sh '''
+    //             COLOR=$(echo ${NAMESPACE} | cut -d "-" -f2)
+    //             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+    //             helm list omni-${COLOR}
+    //             if [ "$(helm list -q omni-${COLOR})" != "" ]
+    //             then 
+    //                 helm del --purge omni-${COLOR}
+    //             fi
+
+    //             sleep 5
+    //             helm install --dep-up --name omni-${COLOR} --namespace self-${COLOR} --timeout 600  helm/omni --set \
+    //                 bs-flex-api.image.tag=${TAG_BS_FLEX_API}, \
+    //                 bs-flex-api.flexmigrator.tag=${TAG_FLEXMIGRATOR}, \
+    //                 ux-flex.image.tag=${TAG_UX_FLEX}, \
+    //                 bs-core-api.image.tag=${TAG_BS_CORE_API}, \
+    //                 bs-core-api.coremigrator.tag=${TAG_COREMIGRATOR}
+    //         '''
+    //     }
+    // } 
+    
+}
