@@ -19,8 +19,8 @@ node {
             COLOR=$(echo ${NAMESPACE} | cut -d "-" -f2)
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
             echo NAMESPACE=${NAMESPACE}
-            echo TAG_UX_FLEX=${TAG_UX_FLEX}
-            echo TAG_BS_FLEX_API=${TAG_BS_FLEX_API}
+            echo TAG_SPRFE=${TAG_SPRFE}
+            echo TAG_SPRBE=${TAG_SPRBE}
             echo COLOR is ${COLOR}
             helm list demo-${COLOR}
             if [ "$(helm list -q demo-${COLOR})" != "" ]
@@ -30,9 +30,7 @@ node {
 
             kubectl delete job demo-${COLOR} --namespace=self-${COLOR} --ignore-not-found 
             sleep 5
-            helm install --dep-up --name demo-${COLOR} --namespace self-${COLOR} --timeout 300  helm/demo --set bs-flex-api.image.tag=${TAG_BS_FLEX_API},bs-flex-api.flexmigrator.tag=${TAG_FLEXMIGRATOR},ux-flex.image.tag=${TAG_UX_FLEX}
-
-            #helm install  --dep-up --name demo-${COLOR} --namespace ${NAMESPACE} helm/demo --set bs-flex-api.demodb.userpw=Passw0rd,bs-flex-api.demodb.host=demo-yellow-demodb,bs-flex-api.demodb.port=1433,bs-flex-api.image.tag=${TAG_BS_FLEX_API},ux-flex.image.tag=${TAG_UX_FLEX}
+            helm install --dep-up --name demo-${COLOR} --namespace self-${COLOR} --timeout 300  helm/demo --set sprbe.image.tag=${TAG_SPRBE},sprfe.image.tag=${TAG_SPRFE}
         '''
     }} 
     
