@@ -19,8 +19,8 @@ node {
             COLOR=$(echo ${NAMESPACE} | cut -d "-" -f2)
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
             echo NAMESPACE=${NAMESPACE}
-            echo TAG_SPRFE=${TAG_SPRFE}
-            echo TAG_SPRBE=${TAG_SPRBE}
+            echo TAG_SPRFE=${SPRFE}
+            echo TAG_SPRBE=${SPRBE}
             echo COLOR is ${COLOR}
             helm list demo-${COLOR}
             if [ "$(helm list -q demo-${COLOR})" != "" ]
