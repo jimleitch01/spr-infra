@@ -27,7 +27,7 @@ node {
                 helm del --purge self-${COLOR}
             fi
 
-            helm install --name self-${COLOR} --namespace self-${COLOR} helm/spr=monolith --set image.tag=${TAG_SPRMONOLITH}
+            helm install --name self-${COLOR} --namespace self-${COLOR} helm/spr-monolith --set image.tag=${TAG_SPRMONOLITH}
         '''
     }} 
 }
