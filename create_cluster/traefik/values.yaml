@@ -1,0 +1,19 @@
+dashboard:
+  enabled: true
+  domain: traefik-ui.test-rig.net
+  auth:
+    basic:
+      admin: $apr1$MDKnNrMS$NyeQn68RJzYOB9TWYc/UU1 
+kubernetes:
+  namespaces:
+    - default
+    - kube-system
+    - self-red
+    - self-orange
+    - self-yello
+    - self-green
+    - self-blue
+    - self-indigo
+    - self-violet
+replicas: 2
+ssl.upstream: true
