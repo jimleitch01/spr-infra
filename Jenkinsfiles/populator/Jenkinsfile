@@ -9,27 +9,6 @@ node {
     } 
 
     stage('Init'){
-<<<<<<< HEAD
-        withCredentials([azureServicePrincipal('lias-omnia-dev-jenkins')]) {
-            sh '''
-                set -e
-                az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-                az aks get-credentials --resource-group lias-omnia-dev-aks-cicd-mvp-rg --subscription ad08cb79-9b11-4db3-91c2-91f2ccec68eb --name lias-omnia-dev-aks-cicd-mvp-aks
-                rm -rf ~/DROPDOWNS/
-            '''
-        }
-    }
- 
-    stage('Get Namespaces'){
-        sh '''
-            set -e
-            for NAMESPACE in $(kubectl get namespaces -o json | jq -r '.items[].metadata | select(.name | startswith("self-")) | .name ')
-            do
-                echo NAMESPACE is $NAMESPACE
-                mkdir -p ~/DROPDOWNS/namespaces/${NAMESPACE}
-            done
-        '''
-=======
     withCredentials([azureServicePrincipal('test-rig-demo-jenkins')]) {
         sh '''
             set -e
@@ -48,23 +27,15 @@ node {
                     mkdir -p ~/DROPDOWNS/namespaces/${NAMESPACE}
                 done
             '''
->>>>>>> d48f149f852846d3f41eba29d0c1b1e6e53ea0ec
     }
  
     stage('Get Repos'){
         sh '''
             set -e
-<<<<<<< HEAD
-            for REPOSITORY in $(az acr repository list --subscription ad08cb79-9b11-4db3-91c2-91f2ccec68eb --name liasomniadevakscicdmvpacr | jq -r '.[]')
-            do
-                echo REPO is $REPOSITORY
-                for TAG in $(az acr repository show-tags --subscription ad08cb79-9b11-4db3-91c2-91f2ccec68eb --name liasomniadevakscicdmvpacr --repository $REPOSITORY | jq -r .[])
-=======
             for REPOSITORY in $(az acr repository list --subscription 57b13db8-88cf-4fe6-924b-ae10dc6fadee --name testrigregistry | jq -r '.[]')
             do
                 echo REPO is $REPOSITORY
                 for TAG in $(az acr repository show-tags --subscription 57b13db8-88cf-4fe6-924b-ae10dc6fadee --name testrigregistry --repository $REPOSITORY | jq -r .[])
->>>>>>> d48f149f852846d3f41eba29d0c1b1e6e53ea0ec
                 do
                     mkdir -p ~/DROPDOWNS/apps/$REPOSITORY/$TAG
                 done
@@ -72,9 +43,6 @@ node {
         '''
     }
 }
-<<<<<<< HEAD
-=======
  
 
 
->>>>>>> d48f149f852846d3f41eba29d0c1b1e6e53ea0ec
