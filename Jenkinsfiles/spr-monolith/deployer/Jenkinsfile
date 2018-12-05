@@ -19,20 +19,15 @@ node {
             COLOR=$(echo ${NAMESPACE} | cut -d "-" -f2)
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
             echo NAMESPACE=${NAMESPACE}
-            echo TAG_SPRFE=${SPRFE}
-            echo TAG_SPRBE=${SPRBE}
+            echo TAG_SPRFE=${SPRMONOLITH}
             echo COLOR is ${COLOR}
             helm list demo-${COLOR}
-            if [ "$(helm list -q demo-${COLOR})" != "" ]
+            if [ "$(helm list -q self-${COLOR})" != "" ]
             then 
-                helm del --purge demo-${COLOR}
+                helm del --purge self-${COLOR}
             fi
 
-            kubectl delete job demo-${COLOR} --namespace=self-${COLOR} --ignore-not-found 
-            sleep 5
-            helm install --dep-up --name demo-${COLOR} --namespace self-${COLOR} --timeout 300  helm/spr --set sprbe.image.tag=${TAG_SPRBE},sprfe.image.tag=${TAG_SPRFE}
+            helm install --name self-${COLOR} --namespace self-${COLOR} helm/spr=monolith --set image.tag=${TAG_SPRMONOLITH}
         '''
     }} 
-    
-
 }
